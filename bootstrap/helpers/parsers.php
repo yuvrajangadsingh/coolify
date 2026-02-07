@@ -1466,7 +1466,7 @@ function serviceParser(Service $resource): Collection
             ->where('is_migrated', true)
             ->first();
         $migratedDb = ServiceDatabase::where('name', $serviceName)
-            ->where('service_id', $resource->id)
+            ->where('application_id', $resource->id)
             ->where('is_migrated', true)
             ->first();
 
@@ -1484,7 +1484,7 @@ function serviceParser(Service $resource): Collection
                 } else {
                     $savedService = ServiceDatabase::firstOrCreate([
                         'name' => $serviceName,
-                        'service_id' => $resource->id,
+                        'application_id' => $resource->id,
                     ]);
                 }
             } else {
@@ -1514,7 +1514,7 @@ function serviceParser(Service $resource): Collection
             ->where('is_migrated', true)
             ->first();
         $migratedDb = ServiceDatabase::where('name', $serviceName)
-            ->where('service_id', $resource->id)
+            ->where('application_id', $resource->id)
             ->where('is_migrated', true)
             ->first();
 
@@ -1555,7 +1555,7 @@ function serviceParser(Service $resource): Collection
             } else {
                 $savedService = ServiceDatabase::firstOrCreate([
                     'name' => $serviceName,
-                    'service_id' => $resource->id,
+                    'application_id' => $resource->id,
                 ]);
             }
         } else {
@@ -1857,7 +1857,7 @@ function serviceParser(Service $resource): Collection
             ->where('is_migrated', true)
             ->first();
         $migratedDb = ServiceDatabase::where('name', $serviceName)
-            ->where('service_id', $resource->id)
+            ->where('application_id', $resource->id)
             ->where('is_migrated', true)
             ->first();
 
@@ -1901,7 +1901,7 @@ function serviceParser(Service $resource): Collection
             } else {
                 $savedService = ServiceDatabase::firstOrCreate([
                     'name' => $serviceName,
-                    'service_id' => $resource->id,
+                    'application_id' => $resource->id,
                 ]);
             }
         } else {
