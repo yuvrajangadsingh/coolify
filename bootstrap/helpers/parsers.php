@@ -681,6 +681,21 @@ function applicationParser(Application $resource, int $pull_request_id = 0, ?int
         $coolifyEnvironments = collect([]);
 
         $isDatabase = isDatabaseImage($image, $service);
+
+        // Create ServiceDatabase record for detected databases so backups can be scheduled
+        if ($isDatabase) {
+            $dbRecord = ServiceDatabase::firstOrCreate([
+                'name' => $serviceName,
+                'application_id' => $resource->id,
+            ], [
+                'image' => $image,
+            ]);
+            if ($dbRecord->image !== $image) {
+                $dbRecord->image = $image;
+                $dbRecord->save();
+            }
+        }
+
         $volumesParsed = collect([]);
 
         $baseName = generateApplicationContainerName(
@@ -1466,7 +1481,7 @@ function serviceParser(Service $resource): Collection
             ->where('is_migrated', true)
             ->first();
         $migratedDb = ServiceDatabase::where('name', $serviceName)
-            ->where('application_id', $resource->id)
+            ->where('service_id', $resource->id)
             ->where('is_migrated', true)
             ->first();
 
@@ -1484,7 +1499,7 @@ function serviceParser(Service $resource): Collection
                 } else {
                     $savedService = ServiceDatabase::firstOrCreate([
                         'name' => $serviceName,
-                        'application_id' => $resource->id,
+                        'service_id' => $resource->id,
                     ]);
                 }
             } else {
@@ -1514,7 +1529,7 @@ function serviceParser(Service $resource): Collection
             ->where('is_migrated', true)
             ->first();
         $migratedDb = ServiceDatabase::where('name', $serviceName)
-            ->where('application_id', $resource->id)
+            ->where('service_id', $resource->id)
             ->where('is_migrated', true)
             ->first();
 
@@ -1555,7 +1570,7 @@ function serviceParser(Service $resource): Collection
             } else {
                 $savedService = ServiceDatabase::firstOrCreate([
                     'name' => $serviceName,
-                    'application_id' => $resource->id,
+                    'service_id' => $resource->id,
                 ]);
             }
         } else {
@@ -1857,7 +1872,7 @@ function serviceParser(Service $resource): Collection
             ->where('is_migrated', true)
             ->first();
         $migratedDb = ServiceDatabase::where('name', $serviceName)
-            ->where('application_id', $resource->id)
+            ->where('service_id', $resource->id)
             ->where('is_migrated', true)
             ->first();
 
@@ -1901,7 +1916,7 @@ function serviceParser(Service $resource): Collection
             } else {
                 $savedService = ServiceDatabase::firstOrCreate([
                     'name' => $serviceName,
-                    'application_id' => $resource->id,
+                    'service_id' => $resource->id,
                 ]);
             }
         } else {
